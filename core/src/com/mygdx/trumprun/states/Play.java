@@ -24,8 +24,9 @@ import com.mygdx.trumprun.handlers.B2dVars;
 import com.mygdx.trumprun.handlers.GameStateManager;
 import com.mygdx.trumprun.handlers.MyContactListener;
 import com.mygdx.trumprun.handlers.MyInput;
+import com.mygdx.trumprun.entities.Player;
 
-import entities.Player;
+
 public class Play extends GameState {
 	
 	private World world;

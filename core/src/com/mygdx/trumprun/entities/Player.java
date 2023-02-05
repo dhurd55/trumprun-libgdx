@@ -1,4 +1,4 @@
-package entities;
+package com.mygdx.trumprun.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
