@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Animation {
 	
+
+	
 	private TextureRegion[] frames;
 	private int currentFrame;
 	

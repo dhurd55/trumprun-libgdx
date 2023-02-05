@@ -12,8 +12,13 @@ public class Content {
 		textures = new HashMap<String, Texture>();
 	}
 	
-	public void loadTexture(String path, String key) {}
+	public void loadTexture(String path, String key) {
+		Texture tex = new Texture(path);
+		this.textures.put(key, tex);
+	}
+	
 	public Texture getTexture(String key) {return textures.get(key);}
+	
 	public void disposeTexture(String key) {
 		Texture tex = textures.get(key);
 		if (tex != null) tex.dispose();

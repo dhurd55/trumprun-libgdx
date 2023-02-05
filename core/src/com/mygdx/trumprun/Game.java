@@ -37,7 +37,7 @@ public class Game extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		
 		res = new Content();
-		res.loadTexture(Gdx.files.internal("sprites/player/TRUMP_FULLSHEET.png").path(), "trumpy");
+		res.loadTexture(Gdx.files.internal("sprites/player/TRUMP_FULLSHEET.png").path(), "trump");
 		sb = new SpriteBatch();
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, V_WIDTH, V_HEIGHT);
@@ -57,10 +57,6 @@ public class Game extends ApplicationAdapter {
 			gsm.render();
 			MyInput.update();
 		}
-		sb.setProjectionMatrix(hudCam.combined);
-		sb.begin();
-		sb.draw(res.getTexture("trumpy"), 0, 0);
-		sb.end();
 	}
 	
 	@Override
