@@ -1,0 +1,47 @@
+playerSheet.png
+size: 1248, 32
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Trump_CIGAR-Sheet
+  rotate: false
+  xy: 0, 0
+  size: 672, 32
+  orig: 672, 32
+  offset: 0, 0
+  index: -1
+Trump_FALLING-Sheet
+  rotate: false
+  xy: 672, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Trump_IDLE-Sheet
+  rotate: false
+  xy: 736, 0
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+Trump_JUMP-Sheet
+  rotate: false
+  xy: 832, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Trump_RUN-Sheet
+  rotate: false
+  xy: 864, 0
+  size: 192, 32
+  orig: 192, 32
+  offset: 0, 0
+  index: -1
+Trump_WALK-Sheet
+  rotate: false
+  xy: 1056, 0
+  size: 192, 32
+  orig: 192, 32
+  offset: 0, 0
+  index: -1

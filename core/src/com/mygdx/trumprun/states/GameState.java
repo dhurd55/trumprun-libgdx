@@ -2,6 +2,7 @@ package com.mygdx.trumprun.states;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.trumprun.handlers.BoundedCamera;
 //import com.mygdx.trumprun.handlers.BoundedCamera;
 import com.mygdx.trumprun.handlers.GameStateManager;
 import com.mygdx.trumprun.Game;
@@ -12,7 +13,7 @@ public abstract class GameState {
 	protected Game game;
 	
 	protected SpriteBatch sb;
-	protected OrthographicCamera cam;
+	protected BoundedCamera cam;
 	protected OrthographicCamera hudCam;
 	
 	protected GameState(GameStateManager gsm) {
@@ -20,7 +21,7 @@ public abstract class GameState {
 		game = gsm.game();
 		sb = game.getSpriteBatch();
 		cam = game.getCamera();
-		hudCam = game.getHUDCamera();
+		hudCam = game.getHUDCamera0();
 	}
 	
 	public abstract void handleInput();

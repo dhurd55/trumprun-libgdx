@@ -31,10 +31,7 @@ public class B2dSprite {
 	
 	public void render(SpriteBatch sb) {
 		sb.begin();
-		sb.draw(
-				animation.getFrame(),
-				body.getPosition().x * B2dVars.PPM - width /2,
-				body.getPosition().y * B2dVars.PPM - height/2 );
+		sb.draw(animation.getFrame(), (int)(body.getPosition().x * B2dVars.PPM - width / 2), (int) (body.getPosition().y * B2dVars.PPM - height / 2));
 		sb.end();
 	}
 	

@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.trumprun.handlers.BoundedCamera;
 import com.mygdx.trumprun.handlers.Content;
 import com.mygdx.trumprun.handlers.GameStateManager;
 import com.mygdx.trumprun.handlers.MyInput;
@@ -20,7 +21,7 @@ public class Game extends ApplicationAdapter {
 	private float accum;
 	
 	private SpriteBatch sb;
-	private OrthographicCamera cam;
+	private BoundedCamera cam;
 	private OrthographicCamera hudCam;
 	
 	private GameStateManager gsm;
@@ -28,8 +29,8 @@ public class Game extends ApplicationAdapter {
 	public static Content res;
 	
 	public SpriteBatch getSpriteBatch() {return sb;}
-	public OrthographicCamera getCamera() {return cam;}
-	public OrthographicCamera getHUDCamera() {return hudCam;}
+	public BoundedCamera getCamera() {return cam;}
+	public OrthographicCamera getHUDCamera0() {return hudCam;}
 		
 	@Override
 	public void create () {
@@ -37,9 +38,9 @@ public class Game extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		
 		res = new Content();
-		res.loadTexture(Gdx.files.internal("sprites/player/TRUMP_FULLSHEET.png").path(), "trump");
+		res.loadTextureAtlas(Gdx.files.internal("sprites/player/playerSheet.txt").path());
 		sb = new SpriteBatch();
-		cam = new OrthographicCamera();
+		cam = new BoundedCamera();
 		cam.setToOrtho(false, V_WIDTH, V_HEIGHT);
 		hudCam = new OrthographicCamera();
 		hudCam.setToOrtho(false, V_WIDTH, V_HEIGHT);
