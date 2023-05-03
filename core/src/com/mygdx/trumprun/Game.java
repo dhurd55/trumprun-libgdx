@@ -13,8 +13,13 @@ import com.mygdx.trumprun.handlers.MyInputProcessor;
 public class Game extends ApplicationAdapter {
 	
 	public static final String TITLE = "TRUMP RUN";
+	
 	public static final int V_WIDTH = 320;
+	//public static final int V_WIDTH = 960;
+
 	public static final int V_HEIGHT = 240;
+	//public static final int V_HEIGHT = 640;
+	
 	public static final int SCALE = 2;
 	
 	public static final float STEP = 1 / 60f;
@@ -30,7 +35,7 @@ public class Game extends ApplicationAdapter {
 	
 	public SpriteBatch getSpriteBatch() {return sb;}
 	public BoundedCamera getCamera() {return cam;}
-	public OrthographicCamera getHUDCamera0() {return hudCam;}
+	public OrthographicCamera getHUDCamera() {return hudCam;}
 		
 	@Override
 	public void create () {

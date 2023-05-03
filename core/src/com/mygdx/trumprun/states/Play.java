@@ -24,6 +24,7 @@ import com.mygdx.trumprun.handlers.B2dVars;
 import com.mygdx.trumprun.handlers.BoundedCamera;
 import com.mygdx.trumprun.handlers.GameStateManager;
 import com.mygdx.trumprun.handlers.MyContactListener;
+import com.mygdx.trumprun.handlers.TileCollisions;
 import com.mygdx.trumprun.handlers.MyInput;
 import com.mygdx.trumprun.entities.Player;
 import com.mygdx.trumprun.entities.PLAYERSTATE;
@@ -61,6 +62,7 @@ public class Play extends GameState {
 		
 		// create player
 		createPlayer();
+		
 		// create tiles
 		createWalls();
 		
@@ -73,88 +75,7 @@ public class Play extends GameState {
 		b2dCam.setBounds(0, (tileMapWidth * tileSize) / PPM, 0, (tileMapHeight * tileSize) / PPM);
 	}
 
-	@Override
-	public void handleInput() {
-		
-		/*player.setWalkLeft(MyInput.LEFT) && cl.isPlayerGrounded());
-		player.setWalkRight(MyInput.RIGHT) && cl.isPlayerGrounded());
-		player.setJumping(MyInput.isPressed(MyInput.UP) && cl.isPlayerGrounded() );
-		
-		/*/
-		// TODO Auto-generated method stub
-		if(MyInput.isPressed(MyInput.UP) && cl.isPlayerGrounded() ) {
-			player.getBody().applyForceToCenter(0, 340, true);
-			player.setState(PLAYERSTATE.JUMPING);
-		}
-		if(MyInput.isDown(MyInput.RIGHT) && cl.isPlayerGrounded() ) {
-			player.getBody().setLinearVelocity(new Vector2(.4f, 0));
-			player.setState(PLAYERSTATE.WALKING);
-			player.setFacingRight(true);
-			
-		}
-		if(MyInput.isDown(MyInput.LEFT) && cl.isPlayerGrounded() ) {
-			player.getBody().setLinearVelocity(new Vector2(-.4f, 0));
-			player.setState(PLAYERSTATE.WALKING);
-			player.setFacingRight(false);
-			//player.getBody().applyForceToCenter(-5, 0, true);
-		}
-		if (MyInput.isPressed(MyInput.DOWN)) {
-			//System.out.println(player.getPositon().x);
-		}
-		// todo probably move this
-		// handles when no input is selected but player states need to change ex. idling, falling
-		else {
-			// if player is still idle
-			if (player.getBody().getLinearVelocity().x == 0 && cl.isPlayerGrounded()) {
-				player.setState(PLAYERSTATE.IDLE);
-			}
-			if (player.getBody().getLinearVelocity().y < 0) {
-				player.setState(PLAYERSTATE.FALLING);
-			}
-		}
-	
-	}
 
-	@Override
-	public void update(float dt) {
-		handleInput();
-		world.step(dt,  6, 2);
-		
-		player.update(dt);
-	}
-	
-	@Override
-	public void render() {
-		
-		// clear screen
-		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		// camera follow player
-		cam.setPosition(player.getPositon().x * PPM + game.V_WIDTH / 4, player.getPositon().y);
-		cam.update();
-		
-		//draw tile map
-		tmRenderer.setView(cam);
-		tmRenderer.render();
-		
-		//draw player
-		sb.setProjectionMatrix(cam.combined);
-		player.render(sb);
-		
-		// debug draw box2d
-		if(debug) {
-			b2dCam.setPosition(player.getPositon().x + Game.V_WIDTH / 4 / PPM, Game.V_HEIGHT / 2 / PPM);
-			b2dCam.update();
-			b2dr.render(world, b2dCam.combined);
-		}
-		
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
-	}
 	
 	/*
 	 * Game object creation
@@ -186,6 +107,7 @@ public class Play extends GameState {
 		
 		//configure player body definition --- bdef
 		bdef.position.set(160 / PPM, 200 / PPM);
+		System.out.println(160/PPM);
 		bdef.type = BodyType.DynamicBody;
 		
 		//initialize body object using body def
@@ -210,20 +132,19 @@ public class Play extends GameState {
 		body.createFixture(fdef).setUserData("foot");
 		
 		// create player
-		//player = new Player(body);
 		player = new Player(body);
 	
 	}
 	
 	/**
-	 * Sets up the tile map collidable tiles.
+	 * Sets up the tile map colidable tiles.
 	 * Reads in tile map layers and sets up box2d bodies.
 	 */
 	private void createWalls() {
 		
 		// load tile map and map renderer
 		try {
-			tileMap = new TmxMapLoader().load("maps/test.tmx");
+			tileMap = new TmxMapLoader().load("maps/test1.tmx");
 		}
 		catch(Exception e) {
 			System.out.println("Cannot find file: maps/test.tmx");
@@ -232,12 +153,13 @@ public class Play extends GameState {
 		tileMapWidth = (int) tileMap.getProperties().get("width");
 		tileMapHeight = (int) tileMap.getProperties().get("height");
 		tileSize = (int) tileMap.getProperties().get("tilewidth");
-		tmRenderer = new OrthogonalTiledMapRenderer(tileMap);
+		tmRenderer = new OrthogonalTiledMapRenderer(tileMap, 1f);
 		
-		// read each of the "red" "green" and "blue" layers
-		TiledMapTileLayer layer;
-		layer = (TiledMapTileLayer) tileMap.getLayers().get(0);
-		createTiles(layer, B2dVars.BIT_GROUND);
+		TileCollisions tiles = new TileCollisions(world, tileMap);
+		//read each of the "red" "green" and "blue" layers
+//		TiledMapTileLayer layer;
+//		layer = (TiledMapTileLayer) tileMap.getLayers().get(0);
+//		createTiles(layer, B2dVars.BIT_GROUND);
 	}
 	
 	private void createTiles(TiledMapTileLayer layer, short bits) {
@@ -278,5 +200,92 @@ public class Play extends GameState {
 			}
 		}
 		
+	}
+	
+	@Override
+	public void handleInput() {
+		
+		// TODO MAKE THESE PLAYER ATTRIBUTES
+		int playerJumpForce = 400;
+		int MAX_SPEED = 50;
+		
+		/*player.setWalkLeft(MyInput.LEFT) && cl.isPlayerGrounded());
+		player.setWalkRight(MyInput.RIGHT) && cl.isPlayerGrounded());
+		player.setJumping(MyInput.isPressed(MyInput.UP) && cl.isPlayerGrounded() );
+		
+		/*/
+		// TODO Auto-generated method stub
+		if(MyInput.isPressed(MyInput.UP) && cl.isPlayerGrounded() ) {
+			player.getBody().applyLinearImpulse(new Vector2(0, 4f), player.getBody().getWorldCenter(), true);
+			player.setState(PLAYERSTATE.JUMPING);
+		}
+		if(MyInput.isDown(MyInput.RIGHT) && player.getBody().getLinearVelocity().x <= 2 ) {
+			player.getBody().applyLinearImpulse(new Vector2(0.1f, 0), player.getBody().getWorldCenter(), true);
+			player.setState(PLAYERSTATE.WALKING);
+			player.setFacingRight(true);
+			
+		}
+		if(MyInput.isDown(MyInput.LEFT) && player.getBody().getLinearVelocity().x >= -2 ) {
+			player.getBody().applyLinearImpulse(new Vector2(-0.1f, 0), player.getBody().getWorldCenter(), true);
+			player.setState(PLAYERSTATE.WALKING);
+			player.setFacingRight(false);
+			//player.getBody().applyForceToCenter(-5, 0, true);
+		}
+		if (MyInput.isPressed(MyInput.DOWN)) {
+			//System.out.println(player.getPositon().x);
+		}
+		// todo probably move this
+		// handles when no input is selected but player states need to change ex. idling, falling
+		else {
+			// if player is still idle
+			if (player.getBody().getLinearVelocity().x == 0 && cl.isPlayerGrounded()) {
+				player.setState(PLAYERSTATE.IDLE);
+			}
+			if (player.getBody().getLinearVelocity().y < 0) {
+				player.setState(PLAYERSTATE.FALLING);
+			}
+		}
+	
+	}
+
+	@Override
+	public void update(float dt) {
+		handleInput();
+		world.step(dt,  6, 2);
+		
+		player.update(dt);
+	}
+	
+	@Override
+	public void render() {
+		
+		// clear screen
+		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		// camera follow player
+		cam.setPosition(player.getPositon().x * PPM + game.V_WIDTH / 4, player.getPositon().y*PPM + game.V_HEIGHT/4);
+		cam.update();
+		
+		//draw tile map
+		tmRenderer.setView(cam);
+		tmRenderer.render();
+		
+		//draw player
+		sb.setProjectionMatrix(cam.combined);
+		player.render(sb);
+		
+		// debug draw box2d
+		if(debug) {
+			b2dCam.setPosition(player.getPositon().x + Game.V_WIDTH / 4 / PPM, player.getPositon().y + Game.V_HEIGHT / 4 / PPM);
+			b2dCam.update();
+			b2dr.render(world, b2dCam.combined);
+		}
+		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+
 	}
 }
