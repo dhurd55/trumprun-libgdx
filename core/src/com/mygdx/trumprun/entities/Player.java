@@ -32,12 +32,12 @@ public class Player extends B2dSprite {
 		//////////////  Animation  \\\\\\\\\\\\\\
 		
 		// load cigar sheet
-		cigar = Game.res.getTextureRegion("Trump_CIGAR-Sheet").split(32, 32)[0];
-		falling = Game.res.getTextureRegion("Trump_FALLING-Sheet").split(32, 32)[0];
-		idle = Game.res.getTextureRegion("Trump_IDLE-Sheet").split(32, 32)[0];
-		jump = Game.res.getTextureRegion("Trump_JUMP-Sheet").split(32, 32)[0];
-		run = Game.res.getTextureRegion("Trump_RUN-Sheet").split(32, 32)[0];
-		walk = Game.res.getTextureRegion("Trump_WALK-Sheet").split(32, 32)[0];
+		cigar = Game.playerRes.getTextureRegion("Trump_CIGAR-Sheet").split(32, 32)[0];
+		falling = Game.playerRes.getTextureRegion("Trump_FALLING-Sheet").split(32, 32)[0];
+		idle = Game.playerRes.getTextureRegion("Trump_IDLE-Sheet").split(32, 32)[0];
+		jump = Game.playerRes.getTextureRegion("Trump_JUMP-Sheet").split(32, 32)[0];
+		run = Game.playerRes.getTextureRegion("Trump_RUN-Sheet").split(32, 32)[0];
+		walk = Game.playerRes.getTextureRegion("Trump_WALK-Sheet").split(32, 32)[0];
 		
 		facingRight = true;
 		flipSprite = false;

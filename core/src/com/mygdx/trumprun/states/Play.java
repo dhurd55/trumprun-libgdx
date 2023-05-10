@@ -27,6 +27,7 @@ import com.mygdx.trumprun.handlers.MyContactListener;
 import com.mygdx.trumprun.handlers.TileCollisions;
 import com.mygdx.trumprun.handlers.MyInput;
 import com.mygdx.trumprun.entities.Player;
+import com.mygdx.trumprun.entities.MagaHat;
 import com.mygdx.trumprun.entities.PLAYERSTATE;
 import com.badlogic.gdx.physics.box2d.Body;
 
@@ -48,8 +49,10 @@ public class Play extends GameState {
 	
 	private boolean debug = true;
 	
-	//private Player player;
+	//Player
 	private Player player;
+	
+	//GameObjects
 	
 	public Play(GameStateManager gsm) {
 		super(gsm);
@@ -75,30 +78,6 @@ public class Play extends GameState {
 		b2dCam.setBounds(0, (tileMapWidth * tileSize) / PPM, 0, (tileMapHeight * tileSize) / PPM);
 	}
 
-
-	
-	/*
-	 * Game object creation
-	 * BodyDef() --- defins a body.. sets the type and position
-	 * Body() ---    the actual body object to be used in game. Methods of this class will be used to manipulate the bodys state in game. ex .. position, velocity, etc. 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	
-	
-	/* method: createPlayer()
-	 * scope: private
-	 * return: void
-	 * method variables: BodyDef bdef, FixtureDef fdef, PolygonShape shape   ( all boxed2d )
-	 * description:
-	 * 				create player creates and initializes the Player object for the play state. 
-	 * 				This is where the players;  position, size, shape, collision (using maskBits), friction, etc. are all initialized.
-	 * 				
-	 * 				after the Body Definition is configured a boxed2d Body object is then created. 
-	 * 				This body object will be the "skeleton" of our player class. We will use many of box2d methods to manipulate the player position, size, etc... in game during gameplay.
-	 */
 	private void createPlayer() {
 		//BodyDef FixtureDef PolygonShape initialization
 		BodyDef bdef = new BodyDef();
@@ -106,8 +85,7 @@ public class Play extends GameState {
 		PolygonShape shape = new PolygonShape();
 		
 		//configure player body definition --- bdef
-		bdef.position.set(160 / PPM, 200 / PPM);
-		System.out.println(160/PPM);
+		bdef.position.set(125 / PPM, 200 / PPM);
 		bdef.type = BodyType.DynamicBody;
 		
 		//initialize body object using body def
@@ -156,50 +134,6 @@ public class Play extends GameState {
 		tmRenderer = new OrthogonalTiledMapRenderer(tileMap, 1f);
 		
 		TileCollisions tiles = new TileCollisions(world, tileMap);
-		//read each of the "red" "green" and "blue" layers
-//		TiledMapTileLayer layer;
-//		layer = (TiledMapTileLayer) tileMap.getLayers().get(0);
-//		createTiles(layer, B2dVars.BIT_GROUND);
-	}
-	
-	private void createTiles(TiledMapTileLayer layer, short bits) {
-		//load tilemap
-		
-		// tile size
-		float ts = layer.getTileWidth();
-		
-		// go through all cells in layer
-		for(int row = 0; row < layer.getHeight(); row++) {
-			for(int col = 0; col < layer.getWidth(); col++) {
-				
-				// get cell
-				Cell cell = layer.getCell(col, row);
-				
-				// check that there is a cell
-				if(cell == null) continue;
-				if(cell.getTile() == null) continue;
-				
-				// create body from cell
-				BodyDef bdef = new BodyDef();
-				bdef.type = BodyType.StaticBody;
-				bdef.position.set((col + 0.5f) * ts / PPM, (row + 0.5f) * ts / PPM);
-				ChainShape cs = new ChainShape();
-				Vector2[] v = new Vector2[3];
-				v[0] = new Vector2(-ts / 2 / PPM, -ts / 2 / PPM);
-				v[1] = new Vector2(-ts / 2 / PPM, ts / 2 / PPM);
-				v[2] = new Vector2(ts / 2 / PPM, ts / 2 / PPM);
-				cs.createChain(v);
-				FixtureDef fd = new FixtureDef();
-				fd.friction = .2f;
-				fd.shape = cs;
-				fd.filter.categoryBits = bits;
-				fd.filter.maskBits = B2dVars.BIT_PLAYER;
-				world.createBody(bdef).createFixture(fd);
-				cs.dispose();
-				
-			}
-		}
-		
 	}
 	
 	@Override
@@ -216,7 +150,7 @@ public class Play extends GameState {
 		/*/
 		// TODO Auto-generated method stub
 		if(MyInput.isPressed(MyInput.UP) && cl.isPlayerGrounded() ) {
-			player.getBody().applyLinearImpulse(new Vector2(0, 4f), player.getBody().getWorldCenter(), true);
+			player.getBody().applyLinearImpulse(new Vector2(0, 4.5f), player.getBody().getWorldCenter(), true);
 			player.setState(PLAYERSTATE.JUMPING);
 		}
 		if(MyInput.isDown(MyInput.RIGHT) && player.getBody().getLinearVelocity().x <= 2 ) {

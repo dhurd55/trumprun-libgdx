@@ -31,7 +31,8 @@ public class Game extends ApplicationAdapter {
 	
 	private GameStateManager gsm;
 	
-	public static Content res;
+	public static Content playerRes;
+	public static Content objectRes;
 	
 	public SpriteBatch getSpriteBatch() {return sb;}
 	public BoundedCamera getCamera() {return cam;}
@@ -42,8 +43,12 @@ public class Game extends ApplicationAdapter {
 		
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		
-		res = new Content();
-		res.loadTextureAtlas(Gdx.files.internal("sprites/player/playerSheet.txt").path());
+		playerRes = new Content();
+		playerRes.loadTextureAtlas(Gdx.files.internal("sprites/player/playerSheet.txt").path());
+		
+		objectRes = new Content();
+		objectRes.loadTextureAtlas(Gdx.files.internal("sprites/objects/objects.txt").path());
+		
 		sb = new SpriteBatch();
 		cam = new BoundedCamera();
 		cam.setToOrtho(false, V_WIDTH, V_HEIGHT);
