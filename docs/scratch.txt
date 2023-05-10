@@ -1,0 +1,37 @@
+Tiled map parsing psudo code
+
+create final TiledMap variable
+assign variable using TmxMapLoader().load("map.tmx")
+get tile size using .getTileWidth();
+call function to parse map
+
+parsemap()
+	get layer from tilemap using .getLayers().get(layerindex)
+	
+	loop matrix double for loop
+		loop double for loop
+			get cell of current cordinates  ==> (x, y)
+			if cell is null ___ skip cell
+			get cellobjects from cell	
+			get mapObject from cell object
+			
+			if mapObject instanceof Rec, circle, etc.
+			/*	logic to create boxed2d body from object *\
+					create RectangleMapObject by casting obj
+					define box2d bodydefinition() =-> bdef
+					create body in world assing bdef
+					build shape ex. rectangeshape
+					create fixture from shape body.createfix
+					dispose of shape .dispose();
+
+
+						
+			//* logic to make box2d bodydef()
+				create new Bodydef();
+				assign to BodyDef bodyDef
+				set type as static body
+				set position(x, y) -->> current position of tile
+				return bodyDef;
+
+
+	
