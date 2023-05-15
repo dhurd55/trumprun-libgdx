@@ -59,9 +59,10 @@ public class TileCollisions
 				FixtureDef fd = new FixtureDef();
 				fd.shape = polygonShape;
 				fd.friction = .2f;
-				fd.filter.categoryBits = B2dVars.BIT_GROUND;
-				fd.filter.maskBits = B2dVars.BIT_PLAYER;
-				world.createBody(bodyDef).createFixture(fd);
+				fd.filter.categoryBits = B2dVars.CATEGORY_GROUND;
+				//fd.filter.maskBits = B2dVars.BIT_PLAYER;
+				fd.filter.maskBits = B2dVars.MASK_GROUND;
+				world.createBody(bodyDef).createFixture(fd).setUserData("ground");
                 polygonShape.dispose();
             }
             else if (mapObject instanceof EllipseMapObject)

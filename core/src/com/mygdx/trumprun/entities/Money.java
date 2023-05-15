@@ -6,17 +6,17 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.trumprun.Game;
 import com.mygdx.trumprun.handlers.B2dVars;
 
-public class MagaHat extends B2dSprite {
+public class Money extends B2dSprite {
 	private boolean remove;
 	TextureRegion[] idle;
 	
-	public MagaHat(Body body) {
+	public Money(Body body) {
 		super(body);
 		
 		remove = false;
 		
 		//load animation /s
-		idle = Game.objectRes.getTextureRegion("magaHat").split(16, 16)[0];
+		idle = Game.objectRes.getTextureRegion("BALLOT_SPRITE-SHEET").split(16, 16)[0];
 
 		//set animation
 		setAnimation(idle, 1/ 7f);

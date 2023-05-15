@@ -17,12 +17,29 @@ public class MyContactListener implements ContactListener {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		
+		//Ground and foot interaction
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")) {
 			numFootContacts++;
+			
 		}
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")) {
 			numFootContacts++;
 		}
+		
+		//Player interactions
+		if(fa.getUserData() != null && fa.getUserData().equals("magaHat")) {
+			
+				System.out.println("magaHat collision");
+			
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("magaHat")) {
+				System.out.println("magaHat collision");
+			
+		}
+		
+		
+		
 	}
 
 	// called when two colliding fixtures end collision
@@ -32,11 +49,13 @@ public class MyContactListener implements ContactListener {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		
+		//Ground and player interaction
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")) {
 			numFootContacts--;
 		}
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")) {
 			numFootContacts--;
+			
 		}
 	}
 	

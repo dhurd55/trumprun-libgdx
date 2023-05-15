@@ -19,28 +19,47 @@ public class Player extends B2dSprite {
 	TextureRegion[] run;
 	TextureRegion[] walk;
 	
+	TextureRegion[] cigarMaga;
+	TextureRegion[] fallingMaga;
+	TextureRegion[] idleMaga;
+	TextureRegion[] jumpMaga;
+	TextureRegion[] runMaga;
+	TextureRegion[] walkMaga;
+	
 	PLAYERSTATE currentState;
-	// player stuf
+	// player stuff
 	
 	boolean facingRight;
 	boolean flipSprite;
 	
+	boolean isMaga;
+	public int numMagaHats;
 	
 	public Player(Body body) {
 		super (body);
 		
 		//////////////  Animation  \\\\\\\\\\\\\\
 		
-		// load cigar sheet
-		cigar = Game.playerRes.getTextureRegion("Trump_CIGAR-Sheet").split(32, 32)[0];
-		falling = Game.playerRes.getTextureRegion("Trump_FALLING-Sheet").split(32, 32)[0];
-		idle = Game.playerRes.getTextureRegion("Trump_IDLE-Sheet").split(32, 32)[0];
-		jump = Game.playerRes.getTextureRegion("Trump_JUMP-Sheet").split(32, 32)[0];
-		run = Game.playerRes.getTextureRegion("Trump_RUN-Sheet").split(32, 32)[0];
-		walk = Game.playerRes.getTextureRegion("Trump_WALK-Sheet").split(32, 32)[0];
+		
+		cigar = Game.playerRes.getTextureRegion("cigar").split(32, 32)[0];
+		falling = Game.playerRes.getTextureRegion("falling").split(32, 32)[0];
+		idle = Game.playerRes.getTextureRegion("idle").split(32, 32)[0];
+		jump = Game.playerRes.getTextureRegion("jump").split(32, 32)[0];
+		run = Game.playerRes.getTextureRegion("running").split(32, 32)[0];
+		walk = Game.playerRes.getTextureRegion("walking").split(32, 32)[0];
+		
+		cigarMaga = Game.playerRes.getTextureRegion("cigarMaga").split(32, 32)[0];
+		fallingMaga = Game.playerRes.getTextureRegion("fallingMaga").split(32, 32)[0];
+		idleMaga = Game.playerRes.getTextureRegion("idleMaga").split(32, 32)[0];
+		jumpMaga = Game.playerRes.getTextureRegion("jumpMaga").split(32, 32)[0];
+		runMaga = Game.playerRes.getTextureRegion("runningMaga").split(32, 32)[0];
+		walkMaga = Game.playerRes.getTextureRegion("walkingMaga").split(32, 32)[0];
 		
 		facingRight = true;
 		flipSprite = false;
+		isMaga = false;
+		
+		numMagaHats = 0;
 		
 		// set init state
 		currentState = PLAYERSTATE.IDLE;
@@ -61,29 +80,61 @@ public class Player extends B2dSprite {
 	
 	public void setAnimation(PLAYERSTATE state) {
 		
-		switch(state) {
-			case CIGAR:
-				setAnimation(cigar, 1/12f);
-				break;
-			case FALLING:
-				setAnimation(falling, 1/2f);
-				break;
-			case IDLE:
-				setAnimation(idle, 1/5f);
-				break;
-			case JUMPING:
-				setAnimation(jump, 1/12f);
-				break;
-			case RUNNING:
-				setAnimation(run, 1/12f);
-				break;
-			case WALKING:
-				setAnimation(walk, 1/10f);
-				break;
-			default:
-				break;
+		if (numMagaHats > 0) {
+			switch(state) {
+				case CIGAR:
+					setAnimation(cigarMaga, 1/12f);
+					break;
+				case FALLING:
+					setAnimation(fallingMaga, 1/2f);
+					break;
+				case IDLE:
+					setAnimation(idleMaga, 1/5f);
+					break;
+				case JUMPING:
+					setAnimation(jumpMaga, 1/12f);
+					break;
+				case RUNNING:
+					setAnimation(runMaga, 1/12f);
+					break;
+				case WALKING:
+					setAnimation(walkMaga, 1/10f);
+					break;
+				default:
+					break;
 		
-		}		
+		}
+			
+		}
+		else {
+			switch(state) {
+				case CIGAR:
+					setAnimation(cigar, 1/12f);
+					break;
+				case FALLING:
+					setAnimation(falling, 1/2f);
+					break;
+				case IDLE:
+					setAnimation(idle, 1/5f);
+					break;
+				case JUMPING:
+					setAnimation(jump, 1/12f);
+					break;
+				case RUNNING:
+					setAnimation(run, 1/12f);
+					break;
+				case WALKING:
+					setAnimation(walk, 1/10f);
+					break;
+				default:
+					break;
+			
+			}		
+		}
+	}
+	
+	public void setMagaHats(int numMagaHats) {
+		this.numMagaHats = numMagaHats;
 	}
 	
 	public void render(SpriteBatch sb) {

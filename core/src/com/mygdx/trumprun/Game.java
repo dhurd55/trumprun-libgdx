@@ -33,6 +33,7 @@ public class Game extends ApplicationAdapter {
 	
 	public static Content playerRes;
 	public static Content objectRes;
+	public static Content hudRes;
 	
 	public SpriteBatch getSpriteBatch() {return sb;}
 	public BoundedCamera getCamera() {return cam;}
@@ -43,11 +44,16 @@ public class Game extends ApplicationAdapter {
 		
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		
+		// Loading in sprite content
+		//TODO: use texture packer to load one big sheet
 		playerRes = new Content();
-		playerRes.loadTextureAtlas(Gdx.files.internal("sprites/player/playerSheet.txt").path());
+		playerRes.loadTextureAtlas(Gdx.files.internal("sprites/player/trumpFullSheet.txt").path());
 		
 		objectRes = new Content();
 		objectRes.loadTextureAtlas(Gdx.files.internal("sprites/objects/objects.txt").path());
+		
+		hudRes = new Content();
+		hudRes.loadTextureAtlas(Gdx.files.internal("sprites/objects/hud.txt").path());
 		
 		sb = new SpriteBatch();
 		cam = new BoundedCamera();

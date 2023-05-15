@@ -1,0 +1,89 @@
+trumpFullSheet.png
+size: 846, 95
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cigar
+  rotate: false
+  xy: 0, 0
+  size: 664, 31
+  orig: 672, 32
+  offset: 8, 0
+  index: -1
+cigarMaga
+  rotate: false
+  xy: 182, 31
+  size: 664, 32
+  orig: 672, 32
+  offset: 8, 0
+  index: -1
+falling
+  rotate: false
+  xy: 0, 63
+  size: 55, 32
+  orig: 64, 32
+  offset: 9, 0
+  index: -1
+fallingMaga
+  rotate: false
+  xy: 55, 63
+  size: 56, 32
+  orig: 64, 32
+  offset: 8, 0
+  index: -1
+idle
+  rotate: false
+  xy: 664, 0
+  size: 82, 31
+  orig: 96, 32
+  offset: 8, 0
+  index: -1
+idleMaga
+  rotate: false
+  xy: 111, 63
+  size: 85, 32
+  orig: 96, 32
+  offset: 8, 0
+  index: -1
+jump
+  rotate: false
+  xy: 746, 0
+  size: 20, 31
+  orig: 32, 32
+  offset: 8, 0
+  index: -1
+jumpMaga
+  rotate: false
+  xy: 196, 63
+  size: 22, 32
+  orig: 32, 32
+  offset: 8, 0
+  index: -1
+running
+  rotate: false
+  xy: 218, 63
+  size: 188, 32
+  orig: 192, 32
+  offset: 4, 0
+  index: -1
+runningMaga
+  rotate: false
+  xy: 406, 63
+  size: 188, 32
+  orig: 192, 32
+  offset: 4, 0
+  index: -1
+walking
+  rotate: false
+  xy: 0, 31
+  size: 182, 31
+  orig: 192, 32
+  offset: 4, 0
+  index: -1
+walkingMaga
+  rotate: false
+  xy: 594, 63
+  size: 185, 32
+  orig: 192, 32
+  offset: 4, 0
+  index: -1

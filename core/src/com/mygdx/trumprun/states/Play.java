@@ -27,7 +27,10 @@ import com.mygdx.trumprun.handlers.MyContactListener;
 import com.mygdx.trumprun.handlers.TileCollisions;
 import com.mygdx.trumprun.handlers.MyInput;
 import com.mygdx.trumprun.entities.Player;
+import com.mygdx.trumprun.entities.Ballot;
+import com.mygdx.trumprun.entities.HUD;
 import com.mygdx.trumprun.entities.MagaHat;
+import com.mygdx.trumprun.entities.Money;
 import com.mygdx.trumprun.entities.PLAYERSTATE;
 import com.badlogic.gdx.physics.box2d.Body;
 
@@ -49,10 +52,16 @@ public class Play extends GameState {
 	
 	private boolean debug = true;
 	
+	//hud
+	private HUD hud;
+	
 	//Player
 	private Player player;
 	
 	//GameObjects
+	private MagaHat magaHat;
+	private Ballot ballot;
+	private Money money;
 	
 	public Play(GameStateManager gsm) {
 		super(gsm);
@@ -66,12 +75,14 @@ public class Play extends GameState {
 		// create player
 		createPlayer();
 		
+		createGameObjects();
+		
 		// create tiles
 		createWalls();
 		
 		cam.setBounds(0, tileMapWidth * tileSize, 0, tileMapHeight * tileSize);
 
-		
+		hud = new HUD(player);
 		// config box2d cam
 		b2dCam = new BoundedCamera();
 		b2dCam.setToOrtho(false, Game.V_WIDTH / PPM, Game.V_HEIGHT / PPM);
@@ -96,16 +107,16 @@ public class Play extends GameState {
 		fdef = new FixtureDef();
 		fdef.shape = shape;
 		fdef.friction = 0.7f;
-		fdef.filter.categoryBits = B2dVars.BIT_PLAYER;
-		fdef.filter.maskBits = B2dVars.BIT_GROUND;
+		fdef.filter.categoryBits = B2dVars.CATEGORY_PLAYER;
+		fdef.filter.maskBits = B2dVars.MASK_PLAYER;
 
 		body.createFixture(fdef).setUserData("player");
 		
 		// create foot sensor
 		shape.setAsBox(8 / PPM, 2/PPM, new Vector2(0, -13 / PPM), 0);
 		fdef.shape = shape;
-		fdef.filter.categoryBits = B2dVars.BIT_PLAYER;
-		fdef.filter.maskBits = B2dVars.BIT_GROUND;
+		fdef.filter.categoryBits = B2dVars.CATEGORY_PLAYER;
+		fdef.filter.maskBits = B2dVars.MASK_PLAYER;
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("foot");
 		
@@ -118,6 +129,90 @@ public class Play extends GameState {
 	 * Sets up the tile map colidable tiles.
 	 * Reads in tile map layers and sets up box2d bodies.
 	 */
+	
+	/*
+	 * TODO: ability to create many objects of same type 
+	 */
+	private void createGameObjects() {
+		
+		/*
+		 * MAGAHATS
+		 *
+		 */
+		//BodyDef FixtureDef PolygonShape initialization
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		//configure player body definition --- bdef
+		bdef.position.set(300/ PPM, 200 / PPM);
+		bdef.type = BodyType.StaticBody;
+		
+		//initialize body object using body def
+		Body body = world.createBody(bdef);  
+		
+		// create fixture definition and assign to body
+		shape.setAsBox(8 / PPM, 8/ PPM);
+		fdef = new FixtureDef();
+		fdef.shape = shape;
+		fdef.isSensor = true;
+		fdef.filter.categoryBits = B2dVars.CATEGORY_MAGAHAT;
+		//fdef.filter.maskBits = B2dVars.BIT_GROUND;
+		fdef.filter.maskBits = B2dVars.MASK_MAGAHAT;
+
+		body.createFixture(fdef).setUserData("magaHat");
+		
+		// create player
+		magaHat = new MagaHat(body);
+		
+		
+		/*
+		 * BALLOTS
+		 */
+		//configure player body definition --- bdef
+		bdef.position.set(280/ PPM, 190 / PPM);
+		bdef.type = BodyType.DynamicBody;
+		
+		//initialize body object using body def
+		body = world.createBody(bdef);  
+		
+		// create fixture definition and assign to body
+		shape.setAsBox(8 / PPM, 8/ PPM);
+		fdef = new FixtureDef();
+		fdef.shape = shape;
+		fdef.friction = 0.7f;
+		//fdef.filter.categoryBits = B2dVars.BIT_PLAYER;
+		//fdef.filter.maskBits = B2dVars.MASK_BALLOT;
+
+		body.createFixture(fdef).setUserData("ballot");
+		
+		// create player
+		ballot = new Ballot(body);
+		
+		/*
+		 * MONEY
+		 */
+		//configure player body definition --- bdef
+		bdef.position.set(320/ PPM, 225 / PPM);
+		bdef.type = BodyType.DynamicBody;
+		
+		//initialize body object using body def
+		body = world.createBody(bdef);  
+		
+		// create fixture definition and assign to body
+		shape.setAsBox(8 / PPM, 8/ PPM);
+		fdef = new FixtureDef();
+		fdef.shape = shape;
+		fdef.friction = 0.7f;
+		//fdef.filter.categoryBits = B2dVars.BIT_PLAYER;
+		//fdef.filter.maskBits = B2dVars.BIT_GROUND;
+
+		body.createFixture(fdef).setUserData("money");
+		
+		// create player
+		money = new Money(body);
+		
+	}
 	private void createWalls() {
 		
 		// load tile map and map renderer
@@ -167,6 +262,7 @@ public class Play extends GameState {
 		}
 		if (MyInput.isPressed(MyInput.DOWN)) {
 			//System.out.println(player.getPositon().x);
+			player.numMagaHats --;
 		}
 		// todo probably move this
 		// handles when no input is selected but player states need to change ex. idling, falling
@@ -188,6 +284,9 @@ public class Play extends GameState {
 		world.step(dt,  6, 2);
 		
 		player.update(dt);
+		magaHat.update(dt);
+		ballot.update(dt);
+		money.update(dt);
 	}
 	
 	@Override
@@ -208,6 +307,12 @@ public class Play extends GameState {
 		sb.setProjectionMatrix(cam.combined);
 		player.render(sb);
 		
+		magaHat.render(sb);
+		ballot.render(sb);
+		money.render(sb);
+		
+		sb.setProjectionMatrix(hudCam.combined);
+		hud.render(sb);
 		// debug draw box2d
 		if(debug) {
 			b2dCam.setPosition(player.getPositon().x + Game.V_WIDTH / 4 / PPM, player.getPositon().y + Game.V_HEIGHT / 4 / PPM);
