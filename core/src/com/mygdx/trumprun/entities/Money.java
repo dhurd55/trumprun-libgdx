@@ -9,17 +9,32 @@ import com.mygdx.trumprun.handlers.B2dVars;
 public class Money extends B2dSprite {
 	private boolean remove;
 	TextureRegion[] idle;
+	private int value;
 	
 	public Money(Body body) {
 		super(body);
 		
+		this.value = 100;
+		
+		//load animation /s
+		idle = Game.objectRes.getTextureRegion("money_sprite-sheet").split(16, 16)[0];
+
+		//set animation
+		setAnimation(idle, 1/ 7f);
+	}
+	
+	public Money(Body body, int value) {
+		super(body);
+		
 		remove = false;
+		this.value = value;
 		
 		//load animation /s
 		idle = Game.objectRes.getTextureRegion("BALLOT_SPRITE-SHEET").split(16, 16)[0];
 
 		//set animation
 		setAnimation(idle, 1/ 7f);
+		
 	}
 	
 	public void render(SpriteBatch sb) {
@@ -31,6 +46,10 @@ public class Money extends B2dSprite {
 		sb.draw(animation.getFrame(), x, y);
 		
 		sb.end();
+	}
+	
+	public int getValue() {
+		return this.value;
 	}
 
 }

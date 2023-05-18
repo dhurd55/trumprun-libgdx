@@ -10,6 +10,22 @@ import com.mygdx.trumprun.Game;
 import com.mygdx.trumprun.handlers.B2dVars;
 
 public class Player extends B2dSprite {
+	// player stuff
+	private int ballots;
+	private int money;
+	private int health;
+	private int maxHealth;
+	private int numMagaProjectiles;
+	private int maxMagaProjectiles;
+	private int damage;
+	private int magaDamage;
+	private boolean dead;
+	private boolean flinching;
+	private int flinchCount;
+	private boolean attacking;
+	private boolean magAttacking;
+	private boolean canJump;
+	private boolean canMagattack;
 	
 	// texture regions for animation
 	TextureRegion[] cigar;
@@ -31,12 +47,14 @@ public class Player extends B2dSprite {
 	
 	boolean facingRight;
 	boolean flipSprite;
-	
-	boolean isMaga;
-	public int numMagaHats;
-	
+		
 	public Player(Body body) {
 		super (body);
+		
+		this.numMagaProjectiles = 0;
+		this.health = 5;
+		this.money = 0;
+		this.ballots = 0;
 		
 		//////////////  Animation  \\\\\\\\\\\\\\
 		
@@ -57,9 +75,7 @@ public class Player extends B2dSprite {
 		
 		facingRight = true;
 		flipSprite = false;
-		isMaga = false;
-		
-		numMagaHats = 0;
+
 		
 		// set init state
 		currentState = PLAYERSTATE.IDLE;
@@ -80,7 +96,7 @@ public class Player extends B2dSprite {
 	
 	public void setAnimation(PLAYERSTATE state) {
 		
-		if (numMagaHats > 0) {
+		if (this.numMagaProjectiles > 0) {
 			switch(state) {
 				case CIGAR:
 					setAnimation(cigarMaga, 1/12f);
@@ -133,10 +149,6 @@ public class Player extends B2dSprite {
 		}
 	}
 	
-	public void setMagaHats(int numMagaHats) {
-		this.numMagaHats = numMagaHats;
-	}
-	
 	public void render(SpriteBatch sb) {
 		float x = (int)(body.getPosition().x * B2dVars.PPM - width / 2);
 		float y = (int) (body.getPosition().y * B2dVars.PPM - height / 2);
@@ -148,5 +160,40 @@ public class Player extends B2dSprite {
 		//sb.draw(animation.getFrame(), (int)(body.getPosition().x * B2dVars.PPM - width / 2), (int) (body.getPosition().y * B2dVars.PPM - height / 2));
 		
 		sb.end();
+	}
+
+	
+	public void collectMagaHat() {
+		this.numMagaProjectiles = 5;
+		this.setAnimation(currentState);
+		
+	}
+
+	public void collectBallot() {
+		this.ballots += 1;
+	}
+
+	public void collectMoney(int value) {
+		this.money += value;
+		
+	}
+	
+	public int getNumMagaProjectiles() {
+		return this.numMagaProjectiles;
+	}
+
+	public int getHealth() {
+		// TODO Auto-generated method stub
+		return this.health;
+	}
+
+	public int getNumMoney() {
+		// TODO Auto-generated method stub
+		return this.money;
+	}
+
+	public int getNumBallots() {
+		// TODO Auto-generated method stub
+		return this.ballots;
 	}
 }

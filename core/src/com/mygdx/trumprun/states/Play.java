@@ -5,6 +5,8 @@ import static com.mygdx.trumprun.handlers.B2dVars.PPM;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
@@ -14,13 +16,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.example.parallax.ParallaxLayer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.trumprun.Game;
 import com.mygdx.trumprun.handlers.B2dVars;
+import com.mygdx.trumprun.handlers.Background;
 import com.mygdx.trumprun.handlers.BoundedCamera;
 import com.mygdx.trumprun.handlers.GameStateManager;
 import com.mygdx.trumprun.handlers.MyContactListener;
@@ -41,7 +47,7 @@ public class Play extends GameState {
 	private Box2DDebugRenderer b2dr;
 	
 	private BoundedCamera b2dCam;
-	private MyContactListener cl;
+	private MyContactListener contactListener;
 	
 	private TiledMap tileMap;
 	private OrthogonalTiledMapRenderer tmRenderer;
@@ -51,7 +57,7 @@ public class Play extends GameState {
 	private int tileMapHeight;
 	
 	private boolean debug = true;
-	
+	Background[] bglayers;
 	//hud
 	private HUD hud;
 	
@@ -59,22 +65,22 @@ public class Play extends GameState {
 	private Player player;
 	
 	//GameObjects
-	private MagaHat magaHat;
-	private Ballot ballot;
-	private Money money;
+	private Array<MagaHat> magaHats;
+	private Array<Ballot> ballots;
+	private Array<Money> moneys;
 	
 	public Play(GameStateManager gsm) {
 		super(gsm);
 		
 		 // set up box2d 
 		world = new World(new Vector2(0, -9.81f), true);
-		cl = new MyContactListener();
-		world.setContactListener(cl);
+		contactListener = new MyContactListener();
+		world.setContactListener(contactListener);
 		b2dr = new Box2DDebugRenderer();
 		
 		// create player
 		createPlayer();
-		
+
 		createGameObjects();
 		
 		// create tiles
@@ -83,6 +89,15 @@ public class Play extends GameState {
 		cam.setBounds(0, tileMapWidth * tileSize, 0, tileMapHeight * tileSize);
 
 		hud = new HUD(player);
+		
+		// load in background layers for parrlax background
+		
+		bglayers =  new Background[3];
+		
+		bglayers[0] = new Background(new Texture(Gdx.files.internal("backgrounds/Background(scratch)/tall/sky.png").path()), cam, 0f);
+		bglayers[1] = new Background(new Texture(Gdx.files.internal("backgrounds/Background(scratch)/tall/farBuildings.png").path()), cam, 0.1f);
+		bglayers[2] = new Background(new Texture(Gdx.files.internal("backgrounds/Background(scratch)/tall/closeBuildings.png").path()), cam, 0.2f);
+		
 		// config box2d cam
 		b2dCam = new BoundedCamera();
 		b2dCam.setToOrtho(false, Game.V_WIDTH / PPM, Game.V_HEIGHT / PPM);
@@ -135,17 +150,21 @@ public class Play extends GameState {
 	 */
 	private void createGameObjects() {
 		
+		
+	
 		/*
 		 * MAGAHATS
 		 *
 		 */
+		magaHats = new Array<MagaHat>();
+		
 		//BodyDef FixtureDef PolygonShape initialization
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
 		//configure player body definition --- bdef
-		bdef.position.set(300/ PPM, 200 / PPM);
+		bdef.position.set(200/ PPM, 65 / PPM);
 		bdef.type = BodyType.StaticBody;
 		
 		//initialize body object using body def
@@ -156,22 +175,25 @@ public class Play extends GameState {
 		fdef = new FixtureDef();
 		fdef.shape = shape;
 		fdef.isSensor = true;
-		fdef.filter.categoryBits = B2dVars.CATEGORY_MAGAHAT;
-		//fdef.filter.maskBits = B2dVars.BIT_GROUND;
-		fdef.filter.maskBits = B2dVars.MASK_MAGAHAT;
+		fdef.filter.categoryBits = B2dVars.CATEGORY_OBJECT;
+		fdef.filter.maskBits = B2dVars.CATEGORY_OBJECT;
 
 		body.createFixture(fdef).setUserData("magaHat");
-		
+		MagaHat magaHat = new MagaHat(body);	
+		body.setUserData(magaHat);
 		// create player
-		magaHat = new MagaHat(body);
+		magaHats.add( magaHat);
 		
 		
 		/*
 		 * BALLOTS
 		 */
+		
+		ballots = new Array<Ballot>();
+		
 		//configure player body definition --- bdef
-		bdef.position.set(280/ PPM, 190 / PPM);
-		bdef.type = BodyType.DynamicBody;
+		bdef.position.set(280/ PPM, 100 / PPM);
+		bdef.type = BodyType.StaticBody;
 		
 		//initialize body object using body def
 		body = world.createBody(bdef);  
@@ -181,20 +203,26 @@ public class Play extends GameState {
 		fdef = new FixtureDef();
 		fdef.shape = shape;
 		fdef.friction = 0.7f;
-		//fdef.filter.categoryBits = B2dVars.BIT_PLAYER;
-		//fdef.filter.maskBits = B2dVars.MASK_BALLOT;
+		fdef.isSensor = true;
+		fdef.filter.categoryBits = B2dVars.CATEGORY_OBJECT;
+		fdef.filter.maskBits = B2dVars.CATEGORY_OBJECT;
 
 		body.createFixture(fdef).setUserData("ballot");
 		
+		Ballot ballot = new Ballot(body);
+		body.setUserData(ballot);
 		// create player
-		ballot = new Ballot(body);
+		ballots.add(ballot);
+//		
+//		/*
+//		 * MONEY
+//		 */
+//		
+        moneys = new Array<Money>();
 		
-		/*
-		 * MONEY
-		 */
 		//configure player body definition --- bdef
 		bdef.position.set(320/ PPM, 225 / PPM);
-		bdef.type = BodyType.DynamicBody;
+		bdef.type = BodyType.StaticBody;
 		
 		//initialize body object using body def
 		body = world.createBody(bdef);  
@@ -204,13 +232,15 @@ public class Play extends GameState {
 		fdef = new FixtureDef();
 		fdef.shape = shape;
 		fdef.friction = 0.7f;
-		//fdef.filter.categoryBits = B2dVars.BIT_PLAYER;
-		//fdef.filter.maskBits = B2dVars.BIT_GROUND;
+		fdef.isSensor = true;
+		fdef.filter.categoryBits = B2dVars.CATEGORY_OBJECT;
+		fdef.filter.maskBits = B2dVars.CATEGORY_OBJECT;
 
 		body.createFixture(fdef).setUserData("money");
 		
-		// create player
-		money = new Money(body);
+		Money money = new Money(body);
+		body.setUserData(money);
+		moneys.add(money);
 		
 	}
 	private void createWalls() {
@@ -244,7 +274,7 @@ public class Play extends GameState {
 		
 		/*/
 		// TODO Auto-generated method stub
-		if(MyInput.isPressed(MyInput.UP) && cl.isPlayerGrounded() ) {
+		if(MyInput.isPressed(MyInput.UP) && contactListener.isPlayerGrounded() ) {
 			player.getBody().applyLinearImpulse(new Vector2(0, 4.5f), player.getBody().getWorldCenter(), true);
 			player.setState(PLAYERSTATE.JUMPING);
 		}
@@ -262,13 +292,13 @@ public class Play extends GameState {
 		}
 		if (MyInput.isPressed(MyInput.DOWN)) {
 			//System.out.println(player.getPositon().x);
-			player.numMagaHats --;
+			//player.numMagaProjectiles --;
 		}
 		// todo probably move this
 		// handles when no input is selected but player states need to change ex. idling, falling
 		else {
 			// if player is still idle
-			if (player.getBody().getLinearVelocity().x == 0 && cl.isPlayerGrounded()) {
+			if (player.getBody().getLinearVelocity().x == 0 && contactListener.isPlayerGrounded()) {
 				player.setState(PLAYERSTATE.IDLE);
 			}
 			if (player.getBody().getLinearVelocity().y < 0) {
@@ -283,10 +313,70 @@ public class Play extends GameState {
 		handleInput();
 		world.step(dt,  6, 2);
 		
+		/// INTERACTION BEWEEN PLAYER AND GAME OBJECTS
+		// check for collected gameobjects
+		Array<Fixture> fixtures = contactListener.getFixtures();
+		for(int i = 0; i < fixtures.size; i++) {
+			Fixture b = fixtures.get(i);
+			Body body = b.getBody();
+
+			//MAGAHAT
+			if (b.getUserData().equals("magaHat")) {
+		
+				//remove magahat
+				magaHats.removeValue((MagaHat) body.getUserData(), true);
+				// remove body
+				world.destroyBody(body);
+				player.collectMagaHat();
+				//todo play sound
+			}
+			
+			//BALLOT
+			else if(b.getUserData().equals("ballot")) {
+				int index = ballots.indexOf((Ballot) body.getUserData(), true);
+				
+				//player changes
+				player.collectBallot();
+				
+				//remove Ballot
+				ballots.removeIndex(index);
+
+				//remove body
+				world.destroyBody(body);
+			
+				//sound
+			}	
+			
+			//MONEY
+			else if(b.getUserData().equals("money")) {
+				int index = moneys.indexOf((Money) body.getUserData(), true);
+				
+				//player changes
+				player.collectMoney(moneys.get(index).getValue());
+				
+				//remove money
+				//moneys.removeValue((Money) b.getBody().getUserData(), true);
+				moneys.removeIndex(index);
+				
+				//remove body
+				world.destroyBody(b.getBody());
+			
+				//sound
+			}
+		}
+		fixtures.clear();
+		
 		player.update(dt);
-		magaHat.update(dt);
-		ballot.update(dt);
-		money.update(dt);
+		
+		for(int i = 0; i < magaHats.size; i++) {
+			magaHats.get(i).update(dt);
+		}
+		for(int i = 0; i < ballots.size; i++) {
+			ballots.get(i).update(dt);
+		}
+		for(int i = 0; i < moneys.size; i++) {
+			moneys.get(i).update(dt);
+		}
 	}
 	
 	@Override
@@ -299,6 +389,13 @@ public class Play extends GameState {
 		cam.setPosition(player.getPositon().x * PPM + game.V_WIDTH / 4, player.getPositon().y*PPM + game.V_HEIGHT/4);
 		cam.update();
 		
+		//draw bg
+
+		sb.setProjectionMatrix(hudCam.combined);
+		for (int i = 0; i < bglayers.length; i++) {
+			bglayers[i].render(sb);
+		}
+		
 		//draw tile map
 		tmRenderer.setView(cam);
 		tmRenderer.render();
@@ -307,14 +404,21 @@ public class Play extends GameState {
 		sb.setProjectionMatrix(cam.combined);
 		player.render(sb);
 		
-		magaHat.render(sb);
-		ballot.render(sb);
-		money.render(sb);
+		for(int i = 0; i < magaHats.size; i++) {
+			magaHats.get(i).render(sb);
+		}
+		for(int i = 0; i < ballots.size; i++) {
+			ballots.get(i).render(sb);
+		}
+		for(int i = 0; i < moneys.size; i++) {
+			moneys.get(i).render(sb);
+		}
 		
 		sb.setProjectionMatrix(hudCam.combined);
 		hud.render(sb);
+
 		// debug draw box2d
-		if(debug) {
+		if(!debug) {
 			b2dCam.setPosition(player.getPositon().x + Game.V_WIDTH / 4 / PPM, player.getPositon().y + Game.V_HEIGHT / 4 / PPM);
 			b2dCam.update();
 			b2dr.render(world, b2dCam.combined);

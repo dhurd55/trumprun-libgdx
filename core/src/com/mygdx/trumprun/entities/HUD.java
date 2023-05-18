@@ -1,6 +1,7 @@
 package com.mygdx.trumprun.entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.trumprun.handlers.B2dVars;
@@ -9,6 +10,8 @@ import com.mygdx.trumprun.Game;
 public class HUD {
 	
 	private Player player;
+	
+	private BitmapFont font;
 	
 	//private TextureRegion[] hudNumbers;
 	private TextureRegion[] hudMoney;
@@ -19,6 +22,7 @@ public class HUD {
 	public HUD(Player player) {
 		
 		this.player = player;
+		font = new BitmapFont();
 		
 		//hudNumbers = Game.hudRes.getTextureRegion("Trump_CIGAR-Sheet").split(16,16)[0];
 		hudMoney = Game.hudRes.getTextureRegion("HudMoney").split(16,16)[0];
@@ -32,30 +36,21 @@ public class HUD {
 		
 		sb.begin();
 		
-		sb.draw(hudMoney[0], 40, 200);
-		sb.draw(hudBallot[0], 60, 200);
-		sb.draw(hudHeart[0], 80, 200);
-		sb.draw(hudMagaHat[0], 100, 200);
-
-
+		// draw hearts
+		for (int i = 0; i < player.getHealth(); i++) {
+			sb.draw(hudHeart[0], 10 +(i*12), 220);
+		}
+		// draw Hats
+		for (int i = 0; i < player.getNumMagaProjectiles(); i++	) {
+			sb.draw(hudMagaHat[0], 10 + (i*10), 200);
+		}
 		
-		// draw blocks
-//		short bits = player.getBody().getFixtureList().first().getFilterData().maskBits;
-//		if((bits & B2DVars.BIT_RED_BLOCK) != 0) {
-//			sb.draw(blocks[0], 40, 208);
-//		}
-//		else if((bits & B2DVars.BIT_GREEN_BLOCK) != 0) {
-//			sb.draw(blocks[1], 40, 208);
-//		}
-//		else if((bits & B2DVars.BIT_BLUE_BLOCK) != 0) {
-//			sb.draw(blocks[2], 40, 208);
-//		}
-//		
-//		// draw crystal
-//		sb.draw(crystal, 100, 208);
-//		
-//		// draw crystal amount
-//		drawString(sb, player.getNumCrystals() + " / " + player.getTotalCrystals(), 132, 211);
+		// money and value
+		sb.draw(hudMoney[0], 10, 180);
+		font.draw(sb, "$ " + Integer.toString(player.getNumMoney()), 30, 195);
+
+		sb.draw(hudBallot[0], 10, 160);
+		font.draw(sb, "x " + Integer.toString(player.getNumBallots()), 30, 175);
 		
 		sb.end();
 		

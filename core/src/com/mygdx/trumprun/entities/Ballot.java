@@ -16,7 +16,7 @@ public class Ballot extends B2dSprite {
 		remove = false;
 		
 		//load animation /s
-		idle = Game.objectRes.getTextureRegion("money_sprite-sheet").split(16, 16)[0];
+		idle = Game.objectRes.getTextureRegion("BALLOT_SPRITE-SHEET").split(16, 16)[0];
 
 		//set animation
 		setAnimation(idle, 1/ 7f);

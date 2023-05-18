@@ -3,7 +3,9 @@ package com.mygdx.trumprun;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.example.parallax.ParallaxLayer;
 import com.mygdx.trumprun.handlers.BoundedCamera;
 import com.mygdx.trumprun.handlers.Content;
 import com.mygdx.trumprun.handlers.GameStateManager;
@@ -35,6 +37,8 @@ public class Game extends ApplicationAdapter {
 	public static Content objectRes;
 	public static Content hudRes;
 	
+
+	
 	public SpriteBatch getSpriteBatch() {return sb;}
 	public BoundedCamera getCamera() {return cam;}
 	public OrthographicCamera getHUDCamera() {return hudCam;}
@@ -54,6 +58,7 @@ public class Game extends ApplicationAdapter {
 		
 		hudRes = new Content();
 		hudRes.loadTextureAtlas(Gdx.files.internal("sprites/objects/hud.txt").path());
+		
 		
 		sb = new SpriteBatch();
 		cam = new BoundedCamera();
