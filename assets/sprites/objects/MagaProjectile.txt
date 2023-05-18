@@ -1,0 +1,12 @@
+MagaProjectile.png
+size: 95, 14
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+MagaProjectile
+  rotate: false
+  xy: 1, 1
+  size: 93, 12
+  orig: 96, 16
+  offset: 1, 2
+  index: -1

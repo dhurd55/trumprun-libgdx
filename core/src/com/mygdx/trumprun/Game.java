@@ -36,6 +36,7 @@ public class Game extends ApplicationAdapter {
 	public static Content playerRes;
 	public static Content objectRes;
 	public static Content hudRes;
+	public static Content projectileRes;
 	
 
 	
@@ -58,6 +59,9 @@ public class Game extends ApplicationAdapter {
 		
 		hudRes = new Content();
 		hudRes.loadTextureAtlas(Gdx.files.internal("sprites/objects/hud.txt").path());
+		
+		projectileRes = new Content();
+		projectileRes.loadTextureAtlas(Gdx.files.internal("sprites/objects/MagaProjectile.txt").path());
 		
 		
 		sb = new SpriteBatch();

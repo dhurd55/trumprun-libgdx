@@ -36,6 +36,7 @@ import com.mygdx.trumprun.entities.Player;
 import com.mygdx.trumprun.entities.Ballot;
 import com.mygdx.trumprun.entities.HUD;
 import com.mygdx.trumprun.entities.MagaHat;
+import com.mygdx.trumprun.entities.MagaProjectile;
 import com.mygdx.trumprun.entities.Money;
 import com.mygdx.trumprun.entities.PLAYERSTATE;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -69,6 +70,9 @@ public class Play extends GameState {
 	private Array<Ballot> ballots;
 	private Array<Money> moneys;
 	
+	//Projectiles
+	private Array<MagaProjectile> magaProjectiles;
+	
 	public Play(GameStateManager gsm) {
 		super(gsm);
 		
@@ -77,6 +81,8 @@ public class Play extends GameState {
 		contactListener = new MyContactListener();
 		world.setContactListener(contactListener);
 		b2dr = new Box2DDebugRenderer();
+		
+		magaProjectiles = new Array<MagaProjectile>();
 		
 		// create player
 		createPlayer();
@@ -291,8 +297,42 @@ public class Play extends GameState {
 			//player.getBody().applyForceToCenter(-5, 0, true);
 		}
 		if (MyInput.isPressed(MyInput.DOWN)) {
-			//System.out.println(player.getPositon().x);
-			//player.numMagaProjectiles --;
+			
+//			// TODO: MOVE
+//			//CREATION OF MAGAPROJECTILE
+//			/*
+//			 * MAGAHATS
+//			 *
+//			 */
+//			
+//			//BodyDef FixtureDef PolygonShape initialization
+//			BodyDef bdef = new BodyDef();
+//			FixtureDef fdef = new FixtureDef();
+//			PolygonShape shape = new PolygonShape();
+//			
+//			//configure body definition
+//			bdef.position.set(player.getPositon().x, player.getPositon().y);
+//			bdef.type = BodyType.KinematicBody;
+//			
+//			//initialize body object in world using body definition
+//			Body body = world.createBody(bdef);  
+//			
+//			// create fixture definition and assign to body
+//			shape.setAsBox(8 / PPM, 8/ PPM);
+//			fdef = new FixtureDef();
+//			fdef.shape = shape;
+//			fdef.isSensor = true;
+//			fdef.filter.categoryBits = B2dVars.CATEGORY_OBJECT;
+//			fdef.filter.maskBits = B2dVars.CATEGORY_OBJECT;
+//
+//			body.createFixture(fdef).setUserData("magaProjectile");
+//			MagaProjectile magaProjectile = new MagaProjectile(body);	
+//			body.setUserData(magaProjectile);
+//			
+//			body.setLinearVelocity(new Vector2(1f, 0));
+//			
+//			// add projectile to array
+//			magaProjectiles.add( magaProjectile );
 		}
 		// todo probably move this
 		// handles when no input is selected but player states need to change ex. idling, falling
